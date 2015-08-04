@@ -17,5 +17,10 @@ func main() {
 
 	for _, serverPath := range *serverPaths {
 		fmt.Println(serverPath)
+		server, err := serverPath.Get(client)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(server.Hostname)
 	}
 }
