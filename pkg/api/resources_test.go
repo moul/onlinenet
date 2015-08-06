@@ -3,6 +3,8 @@ package api
 import (
 	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUnmarshallServer(t *testing.T) {
@@ -10,15 +12,8 @@ func TestUnmarshallServer(t *testing.T) {
 
 	var server Server
 	err := json.Unmarshal(buff, &server)
-	if err != nil {
-		t.Fatal(err)
-	}
 
-	if server.Hostname != "dedibox-ftw" {
-		t.Fatalf("Expected server.Hostname=dedibox-ftw got %s", server.Hostname)
-	}
-
-	if server.Os.Name != "ubuntu" {
-		t.Fatalf("Expected server.Os.Name=ubuntu got %s", server.Os.Name)
-	}
+	assert.Nil(t, err)
+	assert.Equal(t, server.Hostname, "dedibox-ftw")
+	assert.Equal(t, server.Os.Name, "ubuntu")
 }
