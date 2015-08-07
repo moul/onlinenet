@@ -22,7 +22,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "token",
-			Value:  "test",
+			Value:  "",
 			Usage:  "API token",
 			EnvVar: "ONLINENET_TOKEN",
 		},
@@ -35,7 +35,27 @@ func main() {
 		},
 	}
 
+	app.Commands = []cli.Command{
+		{
+			Name:   "abuses",
+			Action: actionAbuses,
+		},
+	}
+
 	app.Run(os.Args)
+}
+
+func actionAbuses(c *cli.Context) {
+	client := api.NewClientWithToken(c.GlobalString("token"))
+
+	abuses, err := client.ListAbuses()
+	if err != nil {
+		logrus.Fatalf("Cannot list abuses: %v", err)
+	}
+
+	for _, abuse := range *abuses {
+		fmt.Println(abuse)
+	}
 }
 
 func actionServers(c *cli.Context) {

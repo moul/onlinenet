@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// Servers
+
 type Server struct {
 	Identifier int    `json:"id",omitempty`
 	Offer      string `json:"offer",omitempty`
@@ -83,3 +85,22 @@ func (r *ServerPath) Identifier() int {
 func (r *ServerPath) Get(c Client) (*GetServerResp, error) {
 	return c.GetServer(r.Identifier())
 }
+
+// Abuses
+
+type Abuse struct {
+	Identifier   int    `json:"id",omitempty`
+	Date         string `json:"date",omitempty` // FIXME: Date
+	Type         string `json:"type",omitempty`
+	Status       string `json:"status",omitempty`
+	Service      string `json:"service",omitempty`
+	SendDate     string `json:"send_date",omitempty` // FIXME: Date
+	Sender       string `json:"senderd",omitempty`
+	Description  string `json:"description",omitempty`
+	ResolvedDate string `json:"resolved_date",omitempty` // FIXME: Date
+	resolver     string `json:"resolver",omitempty`
+	answer       string `json:"answer",omitempty`
+	solution     string `json:"solution",omitempty`
+}
+
+type ListAbusesResp []Abuse
