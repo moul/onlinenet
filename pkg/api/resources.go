@@ -31,7 +31,7 @@ type Server struct {
 		Line       string `json:"line",omitempty`
 		Rack       int    `json:"rack",omitempty`
 		Block      string `json:"block",omitempty`
-		Position   int    `json:"positoin",omitempty`
+		Position   int    `json:"position",omitempty`
 	} `json:"location",omitempty`
 	Network struct {
 		Ip      []string `json:"ip",omitempty`
@@ -63,7 +63,7 @@ type Server struct {
 		} `json:"disks",omitempty`
 	} `json:"drive_arrays",omitempty`
 	Bmc struct {
-		SessionKey *string `json:"session_key",omitempty`
+		SessionKey string `json:"session_key",omitempty`
 	}
 }
 
