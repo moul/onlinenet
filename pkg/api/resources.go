@@ -104,3 +104,16 @@ type Abuse struct {
 }
 
 type ListAbusesResp []Abuse
+
+// User
+
+type User struct {
+	Identifier int    `json:"id",omitempty`
+	Login      string `json:"login",omitempty`
+	Email      string `json:"email",omitempty`
+	FirstName  string `json:"first_name",omitempty`
+	LastName   string `json:"last_name",omitempty`
+	Company    string `json:"company",omitempty`
+}
+
+type GetCurrentUserResp User

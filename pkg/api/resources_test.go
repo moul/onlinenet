@@ -17,3 +17,18 @@ func TestUnmarshallServer(t *testing.T) {
 	assert.Equal(t, server.Hostname, "dedibox-ftw")
 	assert.Equal(t, server.Os.Name, "ubuntu")
 }
+
+func TestUnmarshallUser(t *testing.T) {
+	buff := []byte(`{"id":123456,"login":"johndoe42","email":"technical@example.com","first_name":"John","last_name":"Doe","company":null}`)
+
+	var user User
+	err := json.Unmarshal(buff, &user)
+
+	assert.Nil(t, err)
+	assert.Equal(t, user.Identifier, 123456)
+	assert.Equal(t, user.Login, "johndoe42")
+	assert.Equal(t, user.Email, "technical@example.com")
+	assert.Equal(t, user.FirstName, "John")
+	assert.Equal(t, user.LastName, "Doe")
+	assert.Equal(t, user.Company, "")
+}

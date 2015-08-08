@@ -33,12 +33,13 @@ func main() {
 			Name:   "servers",
 			Action: actionServers,
 		},
-	}
-
-	app.Commands = []cli.Command{
 		{
 			Name:   "abuses",
 			Action: actionAbuses,
+		},
+		{
+			Name:   "user",
+			Action: actionUser,
 		},
 	}
 
@@ -56,6 +57,21 @@ func actionAbuses(c *cli.Context) {
 	for _, abuse := range *abuses {
 		fmt.Println(abuse)
 	}
+}
+
+func actionUser(c *cli.Context) {
+	client := api.NewClientWithToken(c.GlobalString("token"))
+
+	user, err := client.GetCurrentUser()
+	if err != nil {
+		logrus.Fatalf("Cannot get current user: %v", err)
+	}
+
+	w := new(tabwriter.Writer)
+	w.Init(os.Stdout, 10, 1, 3, ' ', 0)
+	fmt.Fprintln(w, "ID\tLogin\tName\tCompany")
+	fmt.Fprintf(w, "%d\t%s\t%s %s\t%s\n", user.Identifier, user.Login, user.FirstName, user.LastName, user.Company)
+	w.Flush()
 }
 
 func actionServers(c *cli.Context) {
