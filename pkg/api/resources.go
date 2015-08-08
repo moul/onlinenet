@@ -3,9 +3,15 @@ package api
 import (
 	"strconv"
 	"strings"
+
+	valid "github.com/asaskevich/govalidator"
 )
 
 // Servers
+
+func dummy() {
+	_ = valid.ToString
+}
 
 type Server struct {
 	Identifier int    `json:"id",omitempty`
@@ -23,7 +29,7 @@ type Server struct {
 	HardwareWatch       bool   `json:"hardware_watch",omitempty`
 	ProactiveMonitoring bool   `json:"proactive_monitoring",omitempty`
 	Support             string `json:"support",omitempty`
-	Abuse               string `json:"abuse",omitempty`
+	Abuse               string `valid:"email" json:"abuse",omitempty`
 	Location            struct {
 		Datacenter string `json:"datacenter",omitempty`
 		Room       string `json:"room",omitempty`
@@ -34,17 +40,17 @@ type Server struct {
 		Position   int    `json:"position",omitempty`
 	} `json:"location",omitempty`
 	Network struct {
-		Ip      []string `json:"ip",omitempty`
-		Private []string `json:"private",omitempty`
-		Ipfo    []string `json:"ipfo",omitempty`
+		Ip      []string `valid:"ip" json:"ip",omitempty`
+		Private []string `valid:"ip" json:"private",omitempty`
+		Ipfo    []string `valid:"ip" json:"ipfo",omitempty`
 	} `json:"network",omitempty`
 	Ip []struct {
-		Address         string `json:"address",omitempty`
+		Address         string `valid:"ip" json:"address",omitempty`
 		Type            string `json:"type",omitempty`
 		Reverse         string `json:"reverse",omitempty`
 		Mac             string `json:"mac",omitempty`
 		SwitchPortState string `json:"switch_port_state",omitempty`
-		Destination     string `json:"destination",omitempty`
+		Destination     string `valid:"ip" json:"destination",omitempty`
 		Server          struct {
 			Ref string `json:"$ref",omitempty`
 		} `json:"server",omitempty`
@@ -110,7 +116,7 @@ type ListAbusesResp []Abuse
 type User struct {
 	Identifier int    `json:"id",omitempty`
 	Login      string `json:"login",omitempty`
-	Email      string `json:"email",omitempty`
+	Email      string `valid:"email" json:"email",omitempty`
 	FirstName  string `json:"first_name",omitempty`
 	LastName   string `json:"last_name",omitempty`
 	Company    string `json:"company",omitempty`

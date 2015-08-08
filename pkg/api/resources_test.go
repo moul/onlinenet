@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -94,6 +95,10 @@ func TestUnmarshallServer(t *testing.T) {
 	var server Server
 	err := json.Unmarshal(buff, &server)
 	assert.Nil(t, err)
+
+	isValid, err := govalidator.ValidateStruct(server)
+	assert.Nil(t, err)
+	assert.True(t, isValid)
 
 	assert.Equal(t, server.Identifier, 424242)
 	assert.Equal(t, server.Offer, "Dedibox XXL")

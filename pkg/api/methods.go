@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/docker/machine/log"
+	"github.com/Sirupsen/logrus"
+	"github.com/asaskevich/govalidator"
 )
 
 // Servers
@@ -14,7 +15,7 @@ func (c *Client) ListServers() (*ListServersResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("API resp: %s", string(body))
+	logrus.Debugf("API resp: %s", string(body))
 
 	var result ListServersResp
 	err = json.Unmarshal(body, &result)
@@ -30,12 +31,22 @@ func (c *Client) GetServer(identifier int) (*GetServerResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("API resp: %s", string(body))
+	logrus.Debugf("API resp: %s", string(body))
 
+	// json parsing
 	var result GetServerResp
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
+	}
+
+	// govalidator
+	isValid, err := govalidator.ValidateStruct(result)
+	if err != nil {
+		return nil, err
+	}
+	if !isValid {
+		logrus.Warnf("Structure seems invalid. Please report bug.")
 	}
 
 	return &result, nil
@@ -48,12 +59,22 @@ func (c *Client) ListAbuses() (*ListAbusesResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("API resp: %s", string(body))
+	logrus.Debugf("API resp: %s", string(body))
 
+	// json parsing
 	var result ListAbusesResp
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
+	}
+
+	// govalidator
+	isValid, err := govalidator.ValidateStruct(result)
+	if err != nil {
+		return nil, err
+	}
+	if !isValid {
+		logrus.Warnf("Structure seems invalid. Please report bug.")
 	}
 
 	return &result, nil
@@ -66,12 +87,22 @@ func (c *Client) GetCurrentUser() (*GetCurrentUserResp, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("API resp: %s", string(body))
+	logrus.Debugf("API resp: %s", string(body))
 
+	// json parsing
 	var result GetCurrentUserResp
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err
+	}
+
+	// govalidator
+	isValid, err := govalidator.ValidateStruct(result)
+	if err != nil {
+		return nil, err
+	}
+	if !isValid {
+		logrus.Warnf("Structure seems invalid. Please report bug.")
 	}
 
 	return &result, nil
