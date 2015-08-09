@@ -41,6 +41,10 @@ func main() {
 			Name:   "user",
 			Action: actionUser,
 		},
+		{
+			Name:   "ddos",
+			Action: actionDdos,
+		},
 	}
 
 	app.Run(os.Args)
@@ -56,6 +60,25 @@ func actionAbuses(c *cli.Context) {
 
 	for _, abuse := range *abuses {
 		fmt.Println(abuse)
+	}
+}
+
+func actionDdos(c *cli.Context) {
+	client := api.NewClientWithToken(c.GlobalString("token"))
+
+	ddosList, err := client.ListDdos()
+	if err != nil {
+		logrus.Fatalf("Cannot list ddos: %v", err)
+	}
+
+	w := new(tabwriter.Writer)
+	w.Init(os.Stdout, 10, 1, 3, ' ', 0)
+	defer w.Flush()
+
+	fmt.Fprintln(w, "ID\tTarget\tStart\tEnd\tMitigation\tType\tMax PPS\tMax BPS\tTimeline")
+
+	for _, ddos := range *ddosList {
+		fmt.Fprintf(w, "%d\t%s\t%s\t%s\t%s\t%s\t%d\t%d\t%d items\n", ddos.Identifier, ddos.Target, ddos.Start, ddos.End, ddos.Mitigation, ddos.Type, ddos.MaxPPS, ddos.MaxBPS, len(ddos.Timeline))
 	}
 }
 

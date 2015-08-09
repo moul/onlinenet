@@ -69,13 +69,45 @@ func (c *Client) ListAbuses() (*ListAbusesResp, error) {
 	}
 
 	// govalidator
-	isValid, err := govalidator.ValidateStruct(result)
+	/*
+		isValid, err := govalidator.ValidateStruct(result)
+		if err != nil {
+			return nil, err
+		}
+		if !isValid {
+			logrus.Warnf("Structure seems invalid. Please report bug.")
+		}
+	*/
+
+	return &result, nil
+}
+
+// Ddos
+
+func (c *Client) ListDdos() (*ListDdosResp, error) {
+	body, err := c.GetApiResource("network/ddos")
 	if err != nil {
 		return nil, err
 	}
-	if !isValid {
-		logrus.Warnf("Structure seems invalid. Please report bug.")
+	logrus.Debugf("API resp: %s", string(body))
+
+	// json parsing
+	var result ListDdosResp
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return nil, err
 	}
+
+	// govalidator
+	/*
+		isValid, err := govalidator.ValidateStruct(result)
+		if err != nil {
+			return nil, err
+		}
+		if !isValid {
+			logrus.Warnf("Structure seems invalid. Please report bug.")
+		}
+	*/
 
 	return &result, nil
 }

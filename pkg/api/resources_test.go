@@ -8,6 +8,43 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func ExampleDDOS_json() []byte {
+	return []byte(`
+{
+    "id": 12345,
+    "target": "1.2.3.4",
+    "start": "2013-10-24T21:46:39.000Z",
+    "end": "2013-10-24T21:55:49.000Z",
+    "mitigation": "root",
+    "type": "DoS Fragmentation Misuse",
+    "max_pps": 261758,
+    "max_bps": 2652170368,
+    "timeline": [
+      {
+        "timestamp": 1382651259,
+        "pps": 174463,
+        "bps": 1780643680
+      },
+      {
+        "timestamp": 1382651319,
+        "pps": 261758,
+        "bps": 2652170368
+      },
+      {
+        "timestamp": 1382651379,
+        "pps": 242217,
+        "bps": 2442621952
+      },
+      {
+        "timestamp": 1382651439,
+        "pps": 75825,
+        "bps": 765489520
+      }
+    ]
+}
+`)
+}
+
 func ExampleServer_json() []byte {
 	return []byte(`
 {
@@ -146,6 +183,30 @@ func TestUnmarshallServer(t *testing.T) {
 	assert.Equal(t, len(server.DriveArrays[0].Disks), 1)
 	assert.Equal(t, server.DriveArrays[0].Disks[0].Ref, "/api/v1/server/hardware/disk/242424")
 	assert.Equal(t, server.Bmc.SessionKey, "")
+}
+
+func TestUnmarshallDdos(t *testing.T) {
+	buff := ExampleDDOS_json()
+
+	var ddos Ddos
+	err := json.Unmarshal(buff, &ddos)
+	assert.Nil(t, err)
+
+	isValid, err := govalidator.ValidateStruct(ddos)
+	assert.Nil(t, err)
+	assert.True(t, isValid)
+
+	assert.Equal(t, ddos.Identifier, 12345)
+	assert.Equal(t, ddos.Target, "1.2.3.4")
+	assert.Equal(t, ddos.Start, "2013-10-24T21:46:39.000Z")
+	assert.Equal(t, ddos.End, "2013-10-24T21:55:49.000Z")
+	assert.Equal(t, ddos.Mitigation, "root")
+	assert.Equal(t, ddos.MaxPPS, 261758)
+	assert.Equal(t, ddos.MaxBPS, 2652170368)
+	assert.Equal(t, len(ddos.Timeline), 4)
+	assert.Equal(t, ddos.Timeline[0].Timestamp, 1382651259)
+	assert.Equal(t, ddos.Timeline[0].PPS, 174463)
+	assert.Equal(t, ddos.Timeline[0].BPS, 1780643680)
 }
 
 func TestUnmarshallUser(t *testing.T) {

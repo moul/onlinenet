@@ -111,6 +111,26 @@ type Abuse struct {
 
 type ListAbusesResp []Abuse
 
+// Ddoss
+
+type Ddos struct {
+	Identifier int    `json:"id",omitempty`
+	Target     string `json:"target",omitempty`
+	Start      string `json:"start",omitempty` // FIXME: date
+	End        string `json:"end",omitempty`   // FIXME: date
+	Mitigation string `json:"mitigation",omitempty`
+	Type       string `json:"type",omitempty`
+	MaxPPS     int    `json:"max_pps",omitempty`
+	MaxBPS     int    `json:"max_bps",omitempty`
+	Timeline   []struct {
+		Timestamp int `json:"timestamp",omitempty`
+		PPS       int `json:"pps",omitempty`
+		BPS       int `json:"bps",omitempty`
+	} `json:"timeline",omitempty`
+}
+
+type ListDdosResp []Ddos
+
 // User
 
 type User struct {
