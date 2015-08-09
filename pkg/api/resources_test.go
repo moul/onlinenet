@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func ExampleDDOS_json() []byte {
+func ExampleDdos_json() []byte {
 	return []byte(`
 {
     "id": 12345,
@@ -186,7 +186,7 @@ func TestUnmarshallServer(t *testing.T) {
 }
 
 func TestUnmarshallDdos(t *testing.T) {
-	buff := ExampleDDOS_json()
+	buff := ExampleDdos_json()
 
 	var ddos Ddos
 	err := json.Unmarshal(buff, &ddos)
