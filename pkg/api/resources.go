@@ -3,6 +3,7 @@ package api
 import (
 	"strconv"
 	"strings"
+	"time"
 
 	valid "github.com/asaskevich/govalidator"
 )
@@ -21,15 +22,15 @@ type Server struct {
 		Name    string `json:"name",omitempty`
 		Version string `json:"version",omitempty`
 	} `json:"os",omitempty`
-	Version             string `json:"version",omitempty`
-	Power               string `json:"power",omitempty`
-	BootMode            string `json:"boot_mode",omitempty`
-	LastReboot          string `json:"last_reboot",omitempty` // FIXME: Date
-	AntiDDOS            bool   `json:"anti_ddos",omitempty`
-	HardwareWatch       bool   `json:"hardware_watch",omitempty`
-	ProactiveMonitoring bool   `json:"proactive_monitoring",omitempty`
-	Support             string `json:"support",omitempty`
-	Abuse               string `valid:"email" json:"abuse",omitempty`
+	Version             string    `json:"version",omitempty`
+	Power               string    `json:"power",omitempty`
+	BootMode            string    `json:"boot_mode",omitempty`
+	LastReboot          time.Time `json:"last_reboot",omitempty`
+	AntiDDOS            bool      `json:"anti_ddos",omitempty`
+	HardwareWatch       bool      `json:"hardware_watch",omitempty`
+	ProactiveMonitoring bool      `json:"proactive_monitoring",omitempty`
+	Support             string    `json:"support",omitempty`
+	Abuse               string    `valid:"email" json:"abuse",omitempty`
 	Location            struct {
 		Datacenter string `json:"datacenter",omitempty`
 		Room       string `json:"room",omitempty`
@@ -95,18 +96,18 @@ func (r *ServerPath) Get(c Client) (*GetServerResp, error) {
 // Abuses
 
 type Abuse struct {
-	Identifier   int    `json:"id",omitempty`
-	Date         string `json:"date",omitempty` // FIXME: Date
-	Type         string `json:"type",omitempty`
-	Status       string `json:"status",omitempty`
-	Service      string `json:"service",omitempty`
-	SendDate     string `json:"send_date",omitempty` // FIXME: Date
-	Sender       string `json:"senderd",omitempty`
-	Description  string `json:"description",omitempty`
-	ResolvedDate string `json:"resolved_date",omitempty` // FIXME: Date
-	resolver     string `json:"resolver",omitempty`
-	answer       string `json:"answer",omitempty`
-	solution     string `json:"solution",omitempty`
+	Identifier   int       `json:"id",omitempty`
+	Date         time.Time `json:"date",omitempty`
+	Type         string    `json:"type",omitempty`
+	Status       string    `json:"status",omitempty`
+	Service      string    `json:"service",omitempty`
+	SendDate     time.Time `json:"send_date",omitempty`
+	Sender       string    `json:"senderd",omitempty`
+	Description  string    `json:"description",omitempty`
+	ResolvedDate time.Time `json:"resolved_date",omitempty`
+	resolver     string    `json:"resolver",omitempty`
+	answer       string    `json:"answer",omitempty`
+	solution     string    `json:"solution",omitempty`
 }
 
 type ListAbusesResp []Abuse
@@ -114,14 +115,14 @@ type ListAbusesResp []Abuse
 // Ddoss
 
 type Ddos struct {
-	Identifier int    `json:"id",omitempty`
-	Target     string `json:"target",omitempty`
-	Start      string `json:"start",omitempty` // FIXME: date
-	End        string `json:"end",omitempty`   // FIXME: date
-	Mitigation string `json:"mitigation",omitempty`
-	Type       string `json:"type",omitempty`
-	MaxPPS     int    `json:"max_pps",omitempty`
-	MaxBPS     int    `json:"max_bps",omitempty`
+	Identifier int       `json:"id",omitempty`
+	Target     string    `json:"target",omitempty`
+	Start      time.Time `json:"start",omitempty`
+	End        time.Time `json:"end",omitempty`
+	Mitigation string    `json:"mitigation",omitempty`
+	Type       string    `json:"type",omitempty`
+	MaxPPS     int       `json:"max_pps",omitempty`
+	MaxBPS     int       `json:"max_bps",omitempty`
 	Timeline   []struct {
 		Timestamp int `json:"timestamp",omitempty`
 		PPS       int `json:"pps",omitempty`

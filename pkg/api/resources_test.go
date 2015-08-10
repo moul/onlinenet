@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/stretchr/testify/assert"
@@ -144,7 +145,11 @@ func TestUnmarshallServer(t *testing.T) {
 	assert.Equal(t, server.Os.Version, "14.04_LTS-server")
 	assert.Equal(t, server.Power, "ON")
 	assert.Equal(t, server.BootMode, "normal")
-	assert.Equal(t, server.LastReboot, "2014-09-15T11:04:49.000Z")
+
+	lastReboot, err := time.Parse(time.RFC3339, "2014-09-15T11:04:49.000Z")
+	assert.Nil(t, err)
+	assert.Equal(t, server.LastReboot, lastReboot)
+
 	assert.True(t, server.AntiDDOS)
 	assert.True(t, server.HardwareWatch)
 	assert.True(t, server.ProactiveMonitoring)
@@ -198,8 +203,15 @@ func TestUnmarshallDdos(t *testing.T) {
 
 	assert.Equal(t, ddos.Identifier, 12345)
 	assert.Equal(t, ddos.Target, "1.2.3.4")
-	assert.Equal(t, ddos.Start, "2013-10-24T21:46:39.000Z")
-	assert.Equal(t, ddos.End, "2013-10-24T21:55:49.000Z")
+
+	ddosStart, err := time.Parse(time.RFC3339, "2013-10-24T21:46:39.000Z")
+	assert.Nil(t, err)
+	assert.Equal(t, ddos.Start, ddosStart)
+
+	ddosEnd, err := time.Parse(time.RFC3339, "2013-10-24T21:55:49.000Z")
+	assert.Nil(t, err)
+	assert.Equal(t, ddos.End, ddosEnd)
+
 	assert.Equal(t, ddos.Mitigation, "root")
 	assert.Equal(t, ddos.MaxPPS, 261758)
 	assert.Equal(t, ddos.MaxBPS, 2652170368)
