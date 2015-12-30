@@ -74,6 +74,8 @@ type Server struct {
 	}
 }
 
+type RebootServerResp bool
+
 type GetServerResp Server
 
 type ServerPath string

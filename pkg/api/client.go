@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -30,6 +32,36 @@ func (c *Client) GetApiResource(resource string) ([]byte, error) {
 	logrus.Debugf("url: %q", url)
 
 	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+c.Token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode > 299 {
+		return nil, fmt.Errorf("Status code: %d", resp.StatusCode)
+	}
+	return ioutil.ReadAll(resp.Body)
+}
+
+func (c *Client) PostApiResource(resource string, data interface{}) ([]byte, error) {
+	payload := new(bytes.Buffer)
+	encoder := json.NewEncoder(payload)
+	if err := encoder.Encode(data); err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("https://api.online.net/api/v1/%s", resource)
+	logrus.Debugf("url: %q", url)
+
+	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
 		return nil, err
 	}

@@ -40,6 +40,10 @@ func main() {
 			Action: actionServerShow,
 		},
 		{
+			Name:   "server-reboot",
+			Action: actionServerReboot,
+		},
+		{
 			Name:   "abuses",
 			Action: actionAbuses,
 		},
@@ -149,4 +153,27 @@ func actionServerShow(c *cli.Context) {
 	}
 
 	fmt.Println(string(body))
+}
+
+func actionServerReboot(c *cli.Context) {
+	if len(c.Args()) < 1 {
+		logrus.Fatalf("You must specify a server")
+	}
+	serverID, err := strconv.Atoi(c.Args()[0])
+	if err != nil {
+		logrus.Fatalf("ServerID %q is not a valid number: %v", c.Args()[0], err)
+	}
+
+	client := api.NewClientWithToken(c.GlobalString("token"))
+
+	ret, err := client.RebootServer(serverID, "no reason", "")
+	if err != nil {
+		logrus.Fatalf("Failed to reboot server %d: %v", serverID, err)
+	}
+
+	if *ret == true {
+		logrus.Infof("Server %d rebooted", serverID)
+	} else {
+		logrus.Fatalf("Server %d failed to reboot (no details)", serverID)
+	}
 }

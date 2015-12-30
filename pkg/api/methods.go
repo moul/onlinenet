@@ -18,8 +18,7 @@ func (c *Client) ListServers() (*ListServersResp, error) {
 	logrus.Debugf("API resp: %s", string(body))
 
 	var result ListServersResp
-	err = json.Unmarshal(body, &result)
-	if err != nil {
+	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}
 
@@ -35,8 +34,7 @@ func (c *Client) GetServer(identifier int) (*GetServerResp, error) {
 
 	// json parsing
 	var result GetServerResp
-	err = json.Unmarshal(body, &result)
-	if err != nil {
+	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}
 
@@ -52,6 +50,29 @@ func (c *Client) GetServer(identifier int) (*GetServerResp, error) {
 	return &result, nil
 }
 
+func (c *Client) RebootServer(identifier int, reason, email string) (*RebootServerResp, error) {
+	payload := map[string]string{
+		"reason": reason,
+		"email":  email,
+	}
+	body, err := c.PostApiResource(fmt.Sprintf("server/reboot/%d", identifier), payload)
+	if err != nil {
+		return nil, err
+	}
+	logrus.Debugf("API resp: %s", string(body))
+
+	// json parsing
+	var result RebootServerResp
+	if err = json.Unmarshal(body, &result); err != nil {
+		return nil, err
+	}
+
+	// govalidator
+	// FIXME: to do
+
+	return &result, nil
+}
+
 // Abuses
 
 func (c *Client) ListAbuses() (*ListAbusesResp, error) {
@@ -63,8 +84,7 @@ func (c *Client) ListAbuses() (*ListAbusesResp, error) {
 
 	// json parsing
 	var result ListAbusesResp
-	err = json.Unmarshal(body, &result)
-	if err != nil {
+	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}
 
@@ -93,8 +113,7 @@ func (c *Client) ListDdos() (*ListDdosResp, error) {
 
 	// json parsing
 	var result ListDdosResp
-	err = json.Unmarshal(body, &result)
-	if err != nil {
+	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}
 
@@ -123,8 +142,7 @@ func (c *Client) GetCurrentUser() (*GetCurrentUserResp, error) {
 
 	// json parsing
 	var result GetCurrentUserResp
-	err = json.Unmarshal(body, &result)
-	if err != nil {
+	if err = json.Unmarshal(body, &result); err != nil {
 		return nil, err
 	}
 
