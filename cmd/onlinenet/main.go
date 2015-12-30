@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
+	"strconv"
 	"text/tabwriter"
 
 	"github.com/Sirupsen/logrus"
@@ -32,6 +34,10 @@ func main() {
 		{
 			Name:   "servers",
 			Action: actionServers,
+		},
+		{
+			Name:   "server-show",
+			Action: actionServerShow,
 		},
 		{
 			Name:   "abuses",
@@ -119,4 +125,28 @@ func actionServers(c *cli.Context) {
 	}
 
 	w.Flush()
+}
+
+func actionServerShow(c *cli.Context) {
+	if len(c.Args()) < 1 {
+		logrus.Fatalf("You must specify a server")
+	}
+	serverID, err := strconv.Atoi(c.Args()[0])
+	if err != nil {
+		logrus.Fatalf("ServerID %q is not a valid number: %v", c.Args()[0], err)
+	}
+
+	client := api.NewClientWithToken(c.GlobalString("token"))
+
+	server, err := client.GetServer(serverID)
+	if err != nil {
+		logrus.Fatalf("Failed to get server %d: %v", serverID, err)
+	}
+
+	body, err := json.MarshalIndent(server, "", "  ")
+	if err != nil {
+		logrus.Fatalf("Failed to marshal JSON: %v", err)
+	}
+
+	fmt.Println(string(body))
 }
